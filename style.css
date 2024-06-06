@@ -24,13 +24,20 @@ main{
     display: none;
 }
 
-.memeImage{
+/*Header*/
+.searchBar{
+    height: 80%;
+}
+
+/*List*/
+.recipeImage{
     width: 100%;
     margin-bottom: 1em;
 }
 .my-masonry-image-list{
     column-count: 2;
 }
+
 /*Sheet*/
 .sheet{
     margin-top: 56px;
@@ -46,7 +53,8 @@ main{
 }
 .sheet main {
     padding: 0;
-    min-height: calc(100vh - 56px - 48px);
+    /* min-height: calc(100vh - 56px - 48px); */
+    min-height: calc(100vh - 48px);
 }
 
 .sheet img {
@@ -67,4 +75,13 @@ footer{
 footer .mdc-tab__icon{
     color: white !important;
     min-height: 56px;
+}
+
+.whiteText{
+    color: white;
+    margin: 5 0;
+}
+
+.recipeList{
+    list-style: none;
 }
