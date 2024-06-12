@@ -30,6 +30,9 @@ main{
 }
 
 /*List*/
+.noFind{
+    width: 100%;
+}
 .recipeImage{
     width: 100%;
     margin-bottom: 1em;
@@ -47,6 +50,42 @@ main{
     margin-left: 0;
     background-color: #2e2e2e;
     transition: 0.3s ease;
+}
+.chat{
+    margin-top: 56px;
+    position: absolute;
+    top:0;
+    width: 100vw;
+    margin-left: 0;
+    background-color: #2e2e2e;
+    transition: 0.3s ease;
+}
+.chat main {
+    padding: 0;
+    /* min-height: calc(100vh - 56px - 48px); */
+    min-height: calc(100vh - 48px);
+    padding-bottom: 56px;
+}
+.msgCard{
+    margin-bottom: 5px;
+    width: 47%;
+}
+.chatList{
+    margin: 0;
+    padding: 0;
+}
+
+.message{
+    display: flex;
+    justify-content: start;
+    width: 94%;
+    margin: 0 auto;
+}
+.messageChristof{
+    display: flex;
+    justify-content: end;
+    width: 94%;
+    margin: 0 auto;
 }
 .sheet-out-of-view{
     margin-left: -100%

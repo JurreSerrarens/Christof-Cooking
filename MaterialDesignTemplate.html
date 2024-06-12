@@ -33,7 +33,7 @@
     <aside class="mdc-drawer mdc-drawer--modal">
         <img src="Resources/ChristofBuffer.png">
         <div class="mdc-drawer__header">
-            <h3 class="mdc-drawer__title">Christof Cooking</h3>
+            <h3 class="mdc-drawer__title">Christof Cooking™</h3>
             <h6 class="mdc-drawer__subtitle">He will bring your grandma back to life</h6>
         </div>
         <div class="mdc-drawer__content">
@@ -43,10 +43,10 @@
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
             <span class="mdc-list-item__text">Home</span>
             </a>
-            <a class="mdc-list-item" href="#">
+            <a class="mdc-list-item chatButt" href="#">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">chat</i>
-            <span class="mdc-list-item__text">Chat</span>
+            <span class="mdc-list-item__text ">Chat</span>
             </a>
             <a class="mdc-list-item" href="#">
             <span class="mdc-list-item__ripple"></span>
@@ -69,7 +69,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start searchBar hidden">
               <label class="mdc-text-field mdc-text-field--filled mdc-text-field--no-label">
                 <span class="mdc-text-field__ripple"></span>
-                <input class="mdc-text-field__input" type="text" placeholder="Placeholder text" aria-label="Label" id="SearchBar">
+                <input class="mdc-text-field__input" type="text" placeholder="Seach here" aria-label="Label" id="SearchBar">
                 <span class="mdc-line-ripple"></span>
               </label>
             </section>
@@ -109,7 +109,10 @@
               </div>
             </div>
         </div>
-
+        
+        <div id="NoFind" >
+          <img src="images/ChristofCooker.png" class="noFind">
+        </div>
         <ul class="mdc-image-list mdc-image-list--masonry my-masonry-image-list" id="results">
         </ul>
     </main>
@@ -134,11 +137,21 @@
       </footer> -->
     </span>
     <!--Chat-Sheet-->
-    <span class="sheet sheet-out-of-view">
+    <span class="chat sheet-out-of-view">
       <main>
-        <h3 id="SheetTitle" class="whiteText">Title</h3>
-        <p id="SheetInstructions" class="whiteText">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nobis pariatur dolore ex fuga. Eum!</p>
+        <h3 id="SheetTitle" class="whiteText">Hello welcome to chating with Christof™</h3>
+        <p id="SheetInstructions" class="whiteText">Leave your prayers here.</p>
+        <ul id="Chat" class="chatList">
+        </ul>
+        
       </main>
+      <footer>
+        <label class="mdc-text-field mdc-text-field--filled mdc-text-field--no-label">
+          <span class="mdc-text-field__ripple"></span>
+          <input class="mdc-text-field__input" type="text" placeholder="Message" aria-label="Label" id="ChatInput">
+          <span class="mdc-line-ripple"></span>
+        </label>
+      </footer>
     </span>
 
     
@@ -158,6 +171,7 @@
 
         let searchOpen = false;
         let sheetOpen = false;
+        let chatOpen = false;
         let page = "Home";
 
         window.addEventListener("load", () => {
@@ -190,6 +204,7 @@
             drawer.open = true;
         });
         
+
         //Sheet
         let images = document.querySelectorAll('.recipeImage');
         images.forEach(i =>{
@@ -201,11 +216,13 @@
         closeMeme.forEach(i =>{
           i.addEventListener('click', (event) => {
               closeSheet(event);
+              closeChat(sheetOpen)
           });
         });
         //Open sheet
         function openSheet(event = null)
         {
+          if(sheetOpen) return
           sheetOpen = true;
           history.pushState(null, "", location.pathname+"#sheet");
 
@@ -215,11 +232,7 @@
           document.querySelector(".navButt").classList.add("hidden")
 
           if(event === null){return}
-          $("#SheetTitle").text("loading")
-          $("#SheetDescription").html("loading")
-          $("#SheetIngredients").empty()
-          $("#ExtraInfo").html(`loading m prep time - loading servings`)
-          $("#SheetInstructions").html("loading")
+          loadMode()
 
           const target = event.target.parentElement
           getInfo(target.getElementsByTagName('p')[0].innerHTML)
@@ -230,6 +243,8 @@
         //Close Sheet
         function closeSheet(event = null)
         {
+          if(!sheetOpen) return
+          loadMode()
           sheetOpen = false;
           history.pushState(null, "", location.pathname);
 
@@ -239,7 +254,50 @@
           document.querySelector(".navButt").classList.remove("hidden")
           document.querySelector(".mdc-top-app-bar__title").innerHTML = page
         }
-        
+        //Set Sheet in load mode
+        function loadMode()
+        {
+          $("#SheetTitle").text("loading")
+          $("#SheetDescription").html("loading")
+          $("#SheetIngredients").empty()
+          $("#ExtraInfo").html(`loading m prep time - loading servings`)
+          $("#SheetInstructions").html("loading")
+        }
+
+        //Chat
+        let chatButt = document.querySelectorAll('.chatButt');
+        chatButt.forEach(i =>{
+          i.addEventListener('click', (event) => {
+            openChat(event);
+          });
+        });
+        //Open sheet
+        function openChat(event = null)
+        {
+          if(chatOpen) return
+          chatOpen = true;
+          history.pushState(null, "", location.pathname+"#chat");
+
+          document.querySelector(".chat").classList.toggle("sheet-out-of-view");
+          document.querySelector(".closeMeme").classList.remove("hidden")
+          document.querySelector(".mainContainer").classList.add("overflow")
+          document.querySelector(".navButt").classList.add("hidden")
+        }
+        //Close Sheet
+        function closeChat(event = null)
+        {
+          if(!chatOpen) return
+          chatOpen = false;
+          history.pushState(null, "", location.pathname);
+
+          document.querySelector(".chat").classList.toggle("sheet-out-of-view");
+          document.querySelector(".closeMeme").classList.add("hidden")
+          document.querySelector(".mainContainer").classList.remove("overflow")
+          document.querySelector(".navButt").classList.remove("hidden")
+          document.querySelector(".mdc-top-app-bar__title").innerHTML = page
+        }
+
+
         //Tab
         const tabButtons = document.querySelector('.mdc-tab-bar');
         tabButtons.addEventListener('click', (event) => {
@@ -253,10 +311,17 @@
         //Open tab
         function openTab(tab = "recipeImage")
         {
-            if(tab === "discover"){RandomRecipes();}
+            if(tab === "discover"){
+              RandomRecipes();
+              $("#NoFind").addClass("hidden")
+            }
+            if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
+            else if(tab === "search") $("#NoFind").removeClass("hidden")
+
             document.querySelectorAll(".recipeImage").forEach(i => { i.classList.add("hidden")});
             document.querySelectorAll("."+tab).forEach(i => { i.classList.remove("hidden")});
         }
+
 
         //Swap Bar
         searchButt.addEventListener('click', (event) => {
@@ -271,6 +336,7 @@
           document.querySelector(".navBar").classList.toggle("hidden");
           document.querySelector(".searchBar").classList.toggle("hidden");
         }
+
 
         //Get recipe info
         function getInfo(id)
@@ -331,8 +397,10 @@
           $.ajax({
               url: spoonUrl,
               success: function(result){
+                  $("#NoFind").removeClass("hidden")
                   //Add Recipes
                   result.results.forEach((element) => {
+                      $("#NoFind").addClass("hidden")
                       jQuery(`<div class="mdc-image-list__item recipeImage search" id="recipe${element.id}">`, {
                           id: `recipe${element.id}`,
                           class: 'mdc-image-list__item recipeImage search',
@@ -379,6 +447,18 @@
               }  
           })
         };
+        
+        //Chat with him
+        document.querySelector("#ChatInput").addEventListener("keyup", i => 
+        {
+          const code = i.key;
+          if(code != "Enter") return
+
+          $("#Chat").append(`<div class="message"><div class="mdc-card msgCard"><p>You: ${$("#ChatInput").val()}</p></div></div>`)
+          $("#Chat").append(`<div class="messageChristof"><div class="mdc-card msgCard"><p>Christof: Genoeg! jij gaat naar de bufferweek!</p></div></div>`)
+          $("#ChatInput").val("")
+
+        })
     </script>
 </body>
 
