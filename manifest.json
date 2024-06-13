@@ -3,7 +3,7 @@
   "short_name": "ChristofCooking",
   "theme_color": "#ff0d0d",
   "background_color": "#fff",
-  "display": "browser",
+  "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
