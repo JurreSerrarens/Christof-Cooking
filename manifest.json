@@ -1,8 +1,8 @@
 {
-  "name": "Funny meme app",
-  "short_name": "Funny",
-  "theme_color": "#ffffff00",
-  "background_color": "#ffffff00",
+  "name": "Christof Cooking",
+  "short_name": "ChristofCooking",
+  "theme_color": "#ff0d0d",
+  "background_color": "#fff",
   "display": "browser",
   "orientation": "portrait",
   "scope": "/",
