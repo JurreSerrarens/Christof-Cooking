@@ -113,8 +113,25 @@
         <div id="NoFind" >
           <img src="images/ChristofCooker.png" class="noFind">
         </div>
+        <div id="Load" >
+          <img src="images/ChristofLoadingBig.gif" class="noFind">
+        </div>
         <ul class="mdc-image-list mdc-image-list--masonry my-masonry-image-list" id="results">
         </ul>
+
+        <aside class="mdc-snackbar">
+          <div class="mdc-snackbar__surface" role="status" aria-relevant="additions">
+            <div class="mdc-snackbar__label" aria-atomic="false">
+              Use the search bar to start searching!
+            </div>
+            <div class="mdc-snackbar__actions" aria-atomic="true">
+              <button type="button" class="mdc-button mdc-snackbar__action">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">Dismiss</span>
+              </button>
+            </div>
+          </div>
+        </aside>
     </main>
 
     <!--Sheet-->
@@ -178,8 +195,8 @@
           if("serviceWorker" in navigator){
             navigator.serviceWorker.register("service-worker.js")
           }
-          RandomRecipes(); //Hello I have been trying to reacht to you about your cars extended warranty it has to be as expanded as this sentence cuz you'll definetly forget to reanable this later :)
           $("#NoFind").addClass("hidden");
+          RandomRecipes(); //Hello I have been trying to reacht to you about your cars extended warranty it has to be as expanded as this sentence cuz you'll definetly forget to reanable this later :)
           setTab("discoverTab");
         });
 
@@ -341,8 +358,11 @@
             RandomRecipes();
             $("#NoFind").addClass("hidden")
           }
-          if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
-          else if(tab === "search") $("#NoFind").removeClass("hidden")
+          const snack = document.querySelector(".mdc-snackbar")
+          // if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
+          // else if(tab === "search") $("#NoFind").removeClass("hidden")
+          if(tab === "search" && document.querySelector(".search")) snack.isOpen.addCla
+          else if(tab === "search") snack.isOpen = true
 
           document.querySelectorAll(".recipeImage").forEach(i => { i.classList.add("hidden")});
           document.querySelectorAll("."+tab).forEach(i => { i.classList.remove("hidden")});
@@ -364,7 +384,6 @@
         //Check for title
         function titleCheck(tab)
         {
-          console.log(tab)
           if(tab === "discoverTab"){
             document.querySelector(".mdc-top-app-bar__title").innerHTML = "Home";
           }
@@ -451,17 +470,24 @@
           $.ajax({
               url: spoonUrl,
               success: function(result){
-                  $("#NoFind").removeClass("hidden")
+                  $("#Load").removeClass("hidden");
+                  $("#NoFind").addClass("hidden")
                   //Add Recipes
                   result.results.forEach((element) => {
-                      $("#NoFind").addClass("hidden")
-                      jQuery(`<div class="mdc-image-list__item recipeImage search" id="recipe${element.id}">`, {
-                          id: `recipe${element.id}`,
-                          class: 'mdc-image-list__item recipeImage search',
-                      }).appendTo('#results');
-                      $(`#recipe${element.id}`).append(`<img class="mdc-image-list__image" src="${element.image}" title="${element.title}">`);
-                      $(`#recipe${element.id}`).append(`<p class="hidden">${element.id}</p>`);
+                    $("#Load").addClass("hidden")
+
+                    jQuery(`<div class="mdc-image-list__item recipeImage search" id="recipe${element.id}">`, {
+                        id: `recipe${element.id}`,
+                        class: 'mdc-image-list__item recipeImage search',
+                    }).appendTo('#results');
+                    $(`#recipe${element.id}`).append(`<img class="mdc-image-list__image" src="${element.image}" title="${element.title}">`);
+                    $(`#recipe${element.id}`).append(`<p class="hidden">${element.id}</p>`);
                   });
+
+                  if(result.results.length === 0){
+                    $("#Load").addClass("hidden")
+                    $("#NoFind").removeClass("hidden")
+                  }
                   //ConnectSheet
                   connectImages();
               },
@@ -478,6 +504,7 @@
         {
           const spoonUrl = "https://api.spoonacular.com/recipes/random?apiKey=24c42907a88e4293a13a0cc539bf52b5&number=5";
           $(".discover").remove()
+          $("#Load").removeClass("hidden");
 
           //Api call
           $.ajax({
@@ -485,6 +512,7 @@
               success: function(result){
                   //Add Recipes
                   result.recipes.forEach((element) => {
+                      $("#Load").addClass("hidden");
                       jQuery(`<div class="mdc-image-list__item recipeImage discover" id="recipe${element.id}">`, {
                           id: `recipe${element.id}`,
                           class: 'mdc-image-list__item recipeImage discover',
