@@ -87,18 +87,18 @@
             <div class="mdc-tab-scroller">
               <div class="mdc-tab-scroller__scroll-area">
                 <div class="mdc-tab-scroller__scroll-content">
-                  <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                  <button id="discoverTab" class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
                     <span class="mdc-tab__content">
-                        <span class="mdc-tab__text-label">Search</span>
+                      <span class="mdc-tab__text-label">Discover</span>
                     </span>
                     <span class="mdc-tab-indicator">
                       <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
                     </span>
                     <span class="mdc-tab__ripple"></span>
                   </button>
-                  <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                  <button id="searchTab" class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
                     <span class="mdc-tab__content">
-                      <span class="mdc-tab__text-label">Discover</span>
+                        <span class="mdc-tab__text-label">Search</span>
                     </span>
                     <span class="mdc-tab-indicator">
                       <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -178,11 +178,14 @@
           if("serviceWorker" in navigator){
             navigator.serviceWorker.register("service-worker.js")
           }
-          //RandomRecipes() Hello I have been trying to reacht to you about your cars extended warranty it has to be as expanded as this sentence cuz you'll definetly forget to reanable this later :)
+          RandomRecipes(); //Hello I have been trying to reacht to you about your cars extended warranty it has to be as expanded as this sentence cuz you'll definetly forget to reanable this later :)
+          $("#NoFind").addClass("hidden");
+          setTab("discoverTab");
         });
 
         addEventListener("popstate", (event) => 
         { 
+          console.log("pop")
           closeSheet()
         });
 
@@ -216,7 +219,7 @@
         closeMeme.forEach(i =>{
           i.addEventListener('click', (event) => {
               closeSheet(event);
-              closeChat(sheetOpen)
+              closeChat(event);
           });
         });
         //Open sheet
@@ -264,6 +267,7 @@
           $("#SheetInstructions").html("loading")
         }
 
+
         //Chat
         let chatButt = document.querySelectorAll('.chatButt');
         chatButt.forEach(i =>{
@@ -271,12 +275,15 @@
             openChat(event);
           });
         });
+        
+
         //Open sheet
         function openChat(event = null)
         {
           if(chatOpen) return
           chatOpen = true;
           history.pushState(null, "", location.pathname+"#chat");
+          console.log("Open Chat")
 
           document.querySelector(".chat").classList.toggle("sheet-out-of-view");
           document.querySelector(".closeMeme").classList.remove("hidden")
@@ -296,6 +303,25 @@
           document.querySelector(".navButt").classList.remove("hidden")
           document.querySelector(".mdc-top-app-bar__title").innerHTML = page
         }
+        //Close all Sheets
+        function closeAll()
+        {
+          history.pushState(null, "", location.pathname);
+          if(chatOpen){
+            document.querySelector(".chat").classList.add("sheet-out-of-view");
+            chatOpen = false;
+          } 
+          if(sheetOpen) {
+            document.querySelector(".sheet").classList.add("sheet-out-of-view");
+            sheetOpen = false
+          }
+          if(sheetOpen || chatOpen){
+            document.querySelector(".closeMeme").classList.add("hidden");
+            document.querySelector(".mainContainer").classList.remove("overflow");
+            document.querySelector(".navButt").classList.remove("hidden");
+            document.querySelector(".mdc-top-app-bar__title").innerHTML = page;    
+          }        
+        }
 
 
         //Tab
@@ -311,15 +337,45 @@
         //Open tab
         function openTab(tab = "recipeImage")
         {
-            if(tab === "discover"){
-              RandomRecipes();
-              $("#NoFind").addClass("hidden")
-            }
-            if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
-            else if(tab === "search") $("#NoFind").removeClass("hidden")
+          if(tab === "discover"){
+            RandomRecipes();
+            $("#NoFind").addClass("hidden")
+          }
+          if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
+          else if(tab === "search") $("#NoFind").removeClass("hidden")
 
-            document.querySelectorAll(".recipeImage").forEach(i => { i.classList.add("hidden")});
-            document.querySelectorAll("."+tab).forEach(i => { i.classList.remove("hidden")});
+          document.querySelectorAll(".recipeImage").forEach(i => { i.classList.add("hidden")});
+          document.querySelectorAll("."+tab).forEach(i => { i.classList.remove("hidden")});
+
+          titleCheck(tab+"Tab");
+        }
+        //Set open tab
+        function setTab(tab = "discoverTab")
+        {
+          $(`.mdc-tab`).removeClass("mdc-tab--active")
+          $(`.mdc-tab`).prop("style","")
+          $(".mdc-tab-indicator").removeClass("mdc-tab-indicator--active")
+          $(`#${tab}`).addClass("mdc-tab--active")
+          $(`#${tab}`).prop("style","--mdc-ripple-fg-size: 581px; --mdc-ripple-fg-scale: 1.6866410194912977; --mdc-ripple-fg-translate-start: 211.5px, -267.5px; --mdc-ripple-fg-translate-end: 193.875px, -266.5px;")
+          $(`#${tab}`).find(".mdc-tab-indicator").addClass("mdc-tab-indicator--active")
+
+          titleCheck(tab);
+        }
+        //Check for title
+        function titleCheck(tab)
+        {
+          console.log(tab)
+          if(tab === "discoverTab"){
+            document.querySelector(".mdc-top-app-bar__title").innerHTML = "Home";
+          }
+          else if(tab === "searchTab"){
+            if(page === "" || page === "Home"){
+              document.querySelector(".mdc-top-app-bar__title").innerHTML = "Search";
+            }
+            else{
+              document.querySelector(".mdc-top-app-bar__title").innerHTML = page;
+            }
+          }
         }
 
 
@@ -336,8 +392,6 @@
           document.querySelector(".navBar").classList.toggle("hidden");
           document.querySelector(".searchBar").classList.toggle("hidden");
         }
-
-
         //Get recipe info
         function getInfo(id)
         {
@@ -365,7 +419,6 @@
               }
           })
         }
-        
         //Connect Images to sheet
         function connectImages()
         {
@@ -388,6 +441,7 @@
           $(".search").remove();
           swapBar()
           openTab("search")
+          setTab("searchTab")
           document.querySelector(".mdc-top-app-bar__title").innerHTML = page;
 
           let spoonUrl = "https://api.spoonacular.com/recipes/complexSearch?apiKey=24c42907a88e4293a13a0cc539bf52b5&query=";
