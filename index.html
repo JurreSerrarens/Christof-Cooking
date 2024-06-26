@@ -113,6 +113,9 @@
         <div id="NoFind" >
           <img src="images/ChristofCooker.png" class="noFind">
         </div>
+        <div id="NoSearch" >
+          <img src="images/ChristofCooker2.png" class="noFind">
+        </div>
         <div id="Load" >
           <img src="images/ChristofLoadingBig.gif" class="noFind">
         </div>
@@ -196,6 +199,7 @@
             navigator.serviceWorker.register("service-worker.js")
           }
           $("#NoFind").addClass("hidden");
+          $("#NoSearch").addClass("hidden");
           RandomRecipes(); //Hello I have been trying to reacht to you about your cars extended warranty it has to be as expanded as this sentence cuz you'll definetly forget to reanable this later :)
           setTab("discoverTab");
         });
@@ -358,11 +362,20 @@
             RandomRecipes();
             $("#NoFind").addClass("hidden")
           }
-          const snack = document.querySelector(".mdc-snackbar")
+          const snack = new MDCSnackbar(document.querySelector(".mdc-snackbar"));
           // if(tab === "search" && document.querySelector(".search")) $("#NoFind").addClass("hidden")
           // else if(tab === "search") $("#NoFind").removeClass("hidden")
-          if(tab === "search" && document.querySelector(".search")) snack.isOpen.addCla
-          else if(tab === "search") snack.isOpen = true
+          if(tab === "search" && document.querySelector(".search")) 
+          {
+            snack.close()
+            $("#NoSearch").addClass("hidden")
+          }
+          else if(tab === "search")
+          {
+            $("#NoSearch").removeClass("hidden")
+            snack.open()
+          } 
+
 
           document.querySelectorAll(".recipeImage").forEach(i => { i.classList.add("hidden")});
           document.querySelectorAll("."+tab).forEach(i => { i.classList.remove("hidden")});
@@ -462,6 +475,8 @@
           openTab("search")
           setTab("searchTab")
           document.querySelector(".mdc-top-app-bar__title").innerHTML = page;
+
+          $("#NoSearch").addClass("hidden");
 
           let spoonUrl = "https://api.spoonacular.com/recipes/complexSearch?apiKey=24c42907a88e4293a13a0cc539bf52b5&query=";
           spoonUrl += page;
